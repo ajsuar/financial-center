@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { formatCurrency, getGoalProgress } from "@/lib/utils";
+import { EditMemberDialog } from "./edit-member-dialog";
 import { Heart, Calendar, ClipboardCheck, Star } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +21,7 @@ function getCompatibilityScore(
 
   if (sharedGoalsCount > 0) score += 30;
   if (goalsCount > 2) score += 20;
-  score += 20; // base participation score
+  score += 20;
 
   const label =
     score >= 90 ? "Money Goals 💰" :
@@ -85,21 +86,21 @@ export default async function CouplePage() {
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-2">
-          <Heart className="h-6 w-6 text-pink-400" />
+        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <Heart className="h-6 w-6 text-pink-500" />
           Couple Hub
         </h1>
-        <p className="text-sm text-zinc-400">Shared finances, check-ins, and money dates</p>
+        <p className="text-sm text-slate-500">Shared finances, check-ins, and money dates</p>
       </div>
 
       {/* Compatibility Score */}
-      <Card className="border-pink-900/40 bg-gradient-to-br from-zinc-900 to-pink-950/20">
+      <Card className="bg-gradient-to-br from-pink-50 to-white border-pink-100">
         <CardContent className="pt-6">
           <div className="text-center space-y-3">
-            <p className="text-sm text-zinc-400">Financial Harmony Score</p>
+            <p className="text-sm text-slate-500">Financial Harmony Score</p>
             <div className="relative mx-auto w-32 h-32">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#27272a" strokeWidth="3" />
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#fce7f3" strokeWidth="3" />
                 <circle
                   cx="18" cy="18" r="15.9" fill="none"
                   stroke="#ec4899" strokeWidth="3"
@@ -108,12 +109,12 @@ export default async function CouplePage() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-3xl font-bold text-zinc-100">{score}</span>
+                <span className="text-3xl font-bold text-slate-900">{score}</span>
               </div>
             </div>
             <div>
-              <p className="text-xl font-bold text-pink-400">{label}</p>
-              <p className="text-sm text-zinc-400 mt-1">{description}</p>
+              <p className="text-xl font-bold text-pink-600">{label}</p>
+              <p className="text-sm text-slate-500 mt-1">{description}</p>
             </div>
           </div>
         </CardContent>
@@ -124,7 +125,7 @@ export default async function CouplePage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Star className="h-4 w-4 text-amber-400" />
+              <Star className="h-4 w-4 text-amber-500" />
               Shared Goals
             </CardTitle>
           </CardHeader>
@@ -134,14 +135,14 @@ export default async function CouplePage() {
               return (
                 <div key={goal.id} className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-zinc-200 flex items-center gap-1.5">
+                    <span className="text-sm font-medium text-slate-800 flex items-center gap-1.5">
                       <span>{goal.emoji}</span>
                       {goal.name}
                     </span>
-                    <span className="text-xs text-zinc-400">{pct.toFixed(0)}%</span>
+                    <span className="text-xs text-slate-500">{pct.toFixed(0)}%</span>
                   </div>
                   <Progress value={pct} className="h-1.5" indicatorClassName="bg-pink-500" />
-                  <div className="flex justify-between text-xs text-zinc-500">
+                  <div className="flex justify-between text-xs text-slate-400">
                     <span>{formatCurrency(goal.currentAmount, "USD", true)}</span>
                     <span>{formatCurrency(goal.targetAmount, "USD", true)}</span>
                   </div>
@@ -149,8 +150,8 @@ export default async function CouplePage() {
               );
             })}
             {sharedGoals.length === 0 && (
-              <p className="text-sm text-zinc-500 text-center py-4">
-                No shared goals yet. <Link href="/goals" className="text-indigo-400 hover:underline">Create one →</Link>
+              <p className="text-sm text-slate-400 text-center py-4">
+                No shared goals yet. <Link href="/goals" className="text-indigo-600 hover:underline">Create one →</Link>
               </p>
             )}
           </CardContent>
@@ -160,18 +161,18 @@ export default async function CouplePage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <ClipboardCheck className="h-4 w-4 text-blue-400" />
+              <ClipboardCheck className="h-4 w-4 text-blue-500" />
               Monthly Check-in
             </CardTitle>
             <CardDescription>Talk through these prompts together</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {CHECK_IN_PROMPTS.map((p, i) => (
-              <div key={p.key} className="flex gap-3 p-3 rounded-lg bg-zinc-800/50">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-700 text-xs font-medium text-zinc-300">
+              <div key={p.key} className="flex gap-3 p-3 rounded-lg bg-slate-50">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-medium text-indigo-700">
                   {i + 1}
                 </span>
-                <p className="text-sm text-zinc-200">{p.prompt}</p>
+                <p className="text-sm text-slate-700">{p.prompt}</p>
               </div>
             ))}
           </CardContent>
@@ -180,12 +181,12 @@ export default async function CouplePage() {
 
       {/* Money Date Agendas */}
       <div>
-        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-emerald-400" /> Money Date Templates
+        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-emerald-500" /> Money Date Templates
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {MONEY_DATE_AGENDAS.map((agenda) => (
-            <Card key={agenda.name} className="hover:border-zinc-600 transition-colors">
+            <Card key={agenda.name} className="hover:border-indigo-200 transition-colors">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
                   <span className="text-2xl">{agenda.icon}</span>
@@ -196,7 +197,7 @@ export default async function CouplePage() {
               <CardContent>
                 <ul className="space-y-1.5">
                   {agenda.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-zinc-300">
+                    <li key={item} className="flex items-start gap-2 text-sm text-slate-600">
                       <span className="text-indigo-400 mt-0.5">•</span>
                       {item}
                     </li>
@@ -213,26 +214,30 @@ export default async function CouplePage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Household Members</CardTitle>
+            <CardDescription>Click the edit icon to rename or customize a member</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap">
               {household.members.map((member) => (
-                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/50">
+                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
                   <div
                     className="flex h-10 w-10 items-center justify-center rounded-full text-xl"
-                    style={{ backgroundColor: member.color + "33" }}
+                    style={{ backgroundColor: member.color + "22" }}
                   >
                     {member.emoji}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-zinc-100">{member.name}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium text-slate-900">{member.name}</p>
+                      <EditMemberDialog member={member} />
+                    </div>
                     {member.isDefault && <Badge variant="secondary" className="text-xs mt-0.5">Primary</Badge>}
                   </div>
                 </div>
               ))}
               <Link
                 href="/settings"
-                className="flex items-center justify-center h-16 px-4 rounded-lg border border-dashed border-zinc-700 text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-colors"
+                className="flex items-center justify-center h-16 px-4 rounded-lg border border-dashed border-slate-300 text-sm text-slate-400 hover:text-slate-600 hover:border-slate-400 transition-colors"
               >
                 + Add partner
               </Link>

@@ -19,19 +19,19 @@ export function NetWorthChart({ data }: NetWorthChartProps) {
       <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="nwFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
+            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
             <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-        <XAxis dataKey="date" tick={{ fill: "#71717a", fontSize: 12 }} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <XAxis dataKey="date" tick={{ fill: "#94a3b8", fontSize: 12 }} />
         <YAxis
-          tick={{ fill: "#71717a", fontSize: 12 }}
+          tick={{ fill: "#94a3b8", fontSize: 12 }}
           tickFormatter={(v) => formatCurrency(v, "USD", true)}
         />
         <Tooltip
-          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
-          labelStyle={{ color: "#a1a1aa" }}
+          contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2e8f0", borderRadius: 8 }}
+          labelStyle={{ color: "#64748b" }}
           formatter={(value: unknown) => [formatCurrency(Number(value)), ""]}
         />
         <Area type="monotone" dataKey="netWorth" stroke="#6366f1" strokeWidth={2} fill="url(#nwFill)" name="Net Worth" />

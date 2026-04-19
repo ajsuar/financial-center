@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { formatCurrency } from "@/lib/utils";
 import { SpendingChart } from "./spending-chart";
 import { NetWorthTrendChart } from "./net-worth-trend-chart";
-import { BarChart3 } from "lucide-react";
 
 async function getLast6MonthsSummaries() {
   const summaries = [];
@@ -36,40 +35,38 @@ export default async function ReportsPage() {
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100">Reports & Analytics</h1>
-        <p className="text-sm text-zinc-400">Financial trends and insights</p>
+        <h1 className="text-2xl font-bold text-slate-900">Reports & Analytics</h1>
+        <p className="text-sm text-slate-500">Financial trends and insights</p>
       </div>
 
-      {/* Insights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">Avg. Savings Rate (6mo)</p>
-            <p className="text-2xl font-bold text-indigo-400">{avgSavingsRate.toFixed(0)}%</p>
+            <p className="text-xs text-slate-500 mb-1">Avg. Savings Rate (6mo)</p>
+            <p className="text-2xl font-bold text-indigo-600">{avgSavingsRate.toFixed(0)}%</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">Top Expense Category</p>
-            <p className="text-lg font-bold text-zinc-100">
+            <p className="text-xs text-slate-500 mb-1">Top Expense Category</p>
+            <p className="text-lg font-bold text-slate-900">
               {currentSummary.byCategory[0]?.icon} {currentSummary.byCategory[0]?.name ?? "—"}
             </p>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               {currentSummary.byCategory[0] ? formatCurrency(currentSummary.byCategory[0].amount) : "No data"}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">This Month Saved</p>
-            <p className={`text-2xl font-bold ${currentSummary.savings >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+            <p className="text-xs text-slate-500 mb-1">This Month Saved</p>
+            <p className={`text-2xl font-bold ${currentSummary.savings >= 0 ? "text-emerald-600" : "text-red-500"}`}>
               {formatCurrency(currentSummary.savings)}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Income vs Expenses chart */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Income vs. Expenses (6 months)</CardTitle>
@@ -79,7 +76,6 @@ export default async function ReportsPage() {
         </CardContent>
       </Card>
 
-      {/* Net Worth trend */}
       {history.length > 1 && (
         <Card>
           <CardHeader>
@@ -91,7 +87,6 @@ export default async function ReportsPage() {
         </Card>
       )}
 
-      {/* Category breakdown */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Spending by Category (This Month)</CardTitle>
@@ -105,21 +100,21 @@ export default async function ReportsPage() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-1.5">
                     <span>{cat.icon}</span>
-                    <span className="text-zinc-200">{cat.name}</span>
+                    <span className="text-slate-700">{cat.name}</span>
                   </span>
                   <div className="flex items-center gap-3">
-                    <span className="text-zinc-500 text-xs">{pct.toFixed(0)}%</span>
-                    <span className="text-zinc-100 font-medium">{formatCurrency(cat.amount)}</span>
+                    <span className="text-slate-400 text-xs">{pct.toFixed(0)}%</span>
+                    <span className="text-slate-900 font-medium">{formatCurrency(cat.amount)}</span>
                   </div>
                 </div>
-                <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                   <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
           })}
           {currentSummary.byCategory.length === 0 && (
-            <p className="text-sm text-zinc-500 text-center py-8">No expense data for this month</p>
+            <p className="text-sm text-slate-400 text-center py-8">No expense data for this month</p>
           )}
         </CardContent>
       </Card>

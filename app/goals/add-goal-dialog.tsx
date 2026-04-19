@@ -111,14 +111,14 @@ export function AddGoalDialog() {
                   key={color}
                   type="button"
                   onClick={() => setSelectedColor(color)}
-                  className={`h-6 w-6 rounded-full border-2 transition-transform ${selectedColor === color ? "border-white scale-110" : "border-transparent"}`}
+                  className={`h-6 w-6 rounded-full border-2 transition-transform ${selectedColor === color ? "border-slate-900 scale-110" : "border-transparent"}`}
                   style={{ backgroundColor: color }}
                 />
               ))}
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="isShared" name="isShared" />
+            <input type="checkbox" id="isShared" name="isShared" className="accent-indigo-600" />
             <Label htmlFor="isShared">Shared goal with partner</Label>
           </div>
           <div className="flex justify-end gap-2 pt-2">

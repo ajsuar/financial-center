@@ -25,7 +25,7 @@ export function AllocationChart({ data }: AllocationChartProps) {
           ))}
         </Pie>
         <Tooltip
-          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
+          contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, color: "#0f172a" }}
           formatter={(value: unknown, name: unknown) => [formatCurrency(Number(value)), String(name ?? "")]}
         />
       </PieChart>

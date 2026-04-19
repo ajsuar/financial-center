@@ -58,31 +58,64 @@ export async function createHolding(data: {
   });
   revalidatePath("/investments");
   revalidatePath("/net-worth");
+  revalidatePath("/dashboard");
   return holding;
 }
 
-export async function updateHoldingPrice(id: string, currentPrice: number, currentValue: number) {
+export async function updateHolding(id: string, data: {
+  ticker?: string;
+  name?: string;
+  assetClass?: string;
+  quantity?: number;
+  costBasis?: number;
+  currentPrice?: number;
+  currentValue?: number;
+}) {
   const old = await prisma.investmentHolding.findUnique({ where: { id } });
   if (!old) return;
 
   const holding = await prisma.investmentHolding.update({
     where: { id },
-    data: { currentPrice, currentValue, priceUpdatedAt: new Date() },
+    data: { ...data, priceUpdatedAt: new Date() },
   });
 
-  const valueDelta = currentValue - old.currentValue;
-  await prisma.account.update({
-    where: { id: old.accountId },
-    data: { balance: { increment: valueDelta } },
-  });
+  const newValue = data.currentValue ?? old.currentValue;
+  const valueDelta = newValue - old.currentValue;
+  if (valueDelta !== 0) {
+    await prisma.account.update({
+      where: { id: old.accountId },
+      data: { balance: { increment: valueDelta } },
+    });
+  }
 
-  // Save price history point
-  await prisma.holdingPricePoint.create({
-    data: { holdingId: id, date: new Date(), price: currentPrice, value: currentValue },
-  });
+  if (data.currentPrice && data.currentValue) {
+    await prisma.holdingPricePoint.create({
+      data: { holdingId: id, date: new Date(), price: data.currentPrice, value: data.currentValue },
+    });
+  }
 
   revalidatePath("/investments");
   revalidatePath("/net-worth");
   revalidatePath("/dashboard");
   return holding;
+}
+
+export async function updateHoldingPrice(id: string, currentPrice: number, currentValue: number) {
+  return updateHolding(id, { currentPrice, currentValue });
+}
+
+export async function deleteHolding(id: string) {
+  const holding = await prisma.investmentHolding.findUnique({ where: { id } });
+  if (!holding) return;
+
+  await prisma.holdingPricePoint.deleteMany({ where: { holdingId: id } });
+  await prisma.investmentHolding.delete({ where: { id } });
+  await prisma.account.update({
+    where: { id: holding.accountId },
+    data: { balance: { increment: -holding.currentValue } },
+  });
+
+  revalidatePath("/investments");
+  revalidatePath("/net-worth");
+  revalidatePath("/dashboard");
 }

@@ -38,15 +38,15 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-zinc-800 bg-zinc-950 h-screen sticky top-0">
+    <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-slate-200 bg-white h-screen sticky top-0 shadow-sm">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-zinc-800">
+      <div className="flex items-center gap-2 px-5 py-5 border-b border-slate-100">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
           <span className="text-white text-sm font-bold">FC</span>
         </div>
         <div>
-          <p className="text-sm font-semibold text-zinc-100">Financial Center</p>
-          <p className="text-xs text-zinc-500">My Household</p>
+          <p className="text-sm font-semibold text-slate-900">Financial Center</p>
+          <p className="text-xs text-slate-400">My Household</p>
         </div>
       </div>
 
@@ -61,21 +61,21 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors group",
                 isActive
-                  ? "bg-indigo-600/20 text-indigo-400"
-                  : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+                  ? "bg-indigo-50 text-indigo-700"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               )}
             >
-              <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-indigo-400" : "text-zinc-500 group-hover:text-zinc-300")} />
+              <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600")} />
               {label}
-              {isActive && <ChevronRight className="ml-auto h-3 w-3 text-indigo-500" />}
+              {isActive && <ChevronRight className="ml-auto h-3 w-3 text-indigo-400" />}
             </Link>
           );
         })}
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-zinc-800">
-        <p className="text-xs text-zinc-600 text-center">Financial Center v1.0</p>
+      <div className="px-4 py-3 border-t border-slate-100">
+        <p className="text-xs text-slate-400 text-center">Financial Center v1.0</p>
       </div>
     </aside>
   );

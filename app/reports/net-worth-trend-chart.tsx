@@ -16,11 +16,11 @@ export function NetWorthTrendChart({ data }: NetWorthTrendChartProps) {
   return (
     <ResponsiveContainer width="100%" height={240}>
       <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-        <XAxis dataKey="date" tick={{ fill: "#71717a", fontSize: 12 }} />
-        <YAxis tick={{ fill: "#71717a", fontSize: 12 }} tickFormatter={(v) => formatCurrency(v, "USD", true)} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <XAxis dataKey="date" tick={{ fill: "#94a3b8", fontSize: 12 }} />
+        <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} tickFormatter={(v) => formatCurrency(v, "USD", true)} />
         <Tooltip
-          contentStyle={{ backgroundColor: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
+          contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2e8f0", borderRadius: 8 }}
           formatter={(value: unknown) => [formatCurrency(Number(value)), "Net Worth"]}
         />
         <Line type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} dot={{ fill: "#6366f1", r: 4 }} />

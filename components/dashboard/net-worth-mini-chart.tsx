@@ -18,7 +18,7 @@ export function NetWorthMiniChart({ data }: NetWorthMiniChartProps) {
       <AreaChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="nwGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
             <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
           </linearGradient>
         </defs>
@@ -26,7 +26,7 @@ export function NetWorthMiniChart({ data }: NetWorthMiniChartProps) {
           content={({ active, payload }) => {
             if (active && payload?.[0]) {
               return (
-                <div className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-200">
+                <div className="bg-white border border-slate-200 rounded px-2 py-1 text-xs text-slate-700 shadow-sm">
                   {formatCurrency(payload[0].value as number)}
                 </div>
               );
@@ -34,14 +34,7 @@ export function NetWorthMiniChart({ data }: NetWorthMiniChartProps) {
             return null;
           }}
         />
-        <Area
-          type="monotone"
-          dataKey="value"
-          stroke="#6366f1"
-          strokeWidth={2}
-          fill="url(#nwGradient)"
-          dot={false}
-        />
+        <Area type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} fill="url(#nwGradient)" dot={false} />
       </AreaChart>
     </ResponsiveContainer>
   );

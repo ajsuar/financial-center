@@ -19,8 +19,8 @@ export default async function AccountsPage() {
     <div className="p-6 space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Accounts</h1>
-          <p className="text-sm text-zinc-400">Manage your financial accounts</p>
+          <h1 className="text-2xl font-bold text-slate-900">Accounts</h1>
+          <p className="text-sm text-slate-500">Manage your financial accounts</p>
         </div>
         <AddAccountDialog />
       </div>
@@ -29,20 +29,20 @@ export default async function AccountsPage() {
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">Total Assets</p>
-            <p className="text-xl font-bold text-emerald-400">{formatCurrency(totalAssets)}</p>
+            <p className="text-xs text-slate-500 mb-1">Total Assets</p>
+            <p className="text-xl font-bold text-emerald-600">{formatCurrency(totalAssets)}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">Total Liabilities</p>
-            <p className="text-xl font-bold text-red-400">{formatCurrency(totalLiabilities)}</p>
+            <p className="text-xs text-slate-500 mb-1">Total Liabilities</p>
+            <p className="text-xl font-bold text-red-500">{formatCurrency(totalLiabilities)}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-xs text-zinc-400 mb-1">Net Worth</p>
-            <p className={`text-xl font-bold ${netWorth >= 0 ? "text-zinc-100" : "text-red-400"}`}>
+            <p className="text-xs text-slate-500 mb-1">Net Worth</p>
+            <p className={`text-xl font-bold ${netWorth >= 0 ? "text-slate-900" : "text-red-500"}`}>
               {formatCurrency(netWorth)}
             </p>
           </CardContent>
@@ -52,7 +52,7 @@ export default async function AccountsPage() {
       {/* Assets */}
       {assets.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">Assets</h2>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Assets</h2>
           <div className="space-y-2">
             {assets.map((acc) => (
               <Card key={acc.id}>
@@ -60,16 +60,16 @@ export default async function AccountsPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{acc.icon ?? "🏦"}</span>
                     <div>
-                      <p className="font-medium text-zinc-100">{acc.name}</p>
+                      <p className="font-medium text-slate-900">{acc.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <Badge variant="secondary" className="text-xs">{getAccountTypeLabel(acc.type)}</Badge>
-                        {acc.institution && <span className="text-xs text-zinc-500">{acc.institution}</span>}
+                        {acc.institution && <span className="text-xs text-slate-500">{acc.institution}</span>}
                         {acc.isShared && <Badge variant="outline" className="text-xs">Shared</Badge>}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <p className="text-lg font-semibold text-emerald-400">{formatCurrency(acc.balance)}</p>
+                    <p className="text-lg font-semibold text-emerald-600">{formatCurrency(acc.balance)}</p>
                     <EditAccountDialog account={acc} />
                   </div>
                 </CardContent>
@@ -82,7 +82,7 @@ export default async function AccountsPage() {
       {/* Liabilities */}
       {liabilities.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">Liabilities</h2>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Liabilities</h2>
           <div className="space-y-2">
             {liabilities.map((acc) => (
               <Card key={acc.id}>
@@ -90,15 +90,15 @@ export default async function AccountsPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{acc.icon ?? "💳"}</span>
                     <div>
-                      <p className="font-medium text-zinc-100">{acc.name}</p>
+                      <p className="font-medium text-slate-900">{acc.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <Badge variant="destructive" className="text-xs">{getAccountTypeLabel(acc.type)}</Badge>
-                        {acc.institution && <span className="text-xs text-zinc-500">{acc.institution}</span>}
+                        {acc.institution && <span className="text-xs text-slate-500">{acc.institution}</span>}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <p className="text-lg font-semibold text-red-400">{formatCurrency(Math.abs(acc.balance))}</p>
+                    <p className="text-lg font-semibold text-red-500">{formatCurrency(Math.abs(acc.balance))}</p>
                     <EditAccountDialog account={acc} />
                   </div>
                 </CardContent>
