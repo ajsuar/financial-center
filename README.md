@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Financial Center
 
-## Getting Started
+A comprehensive personal finance app for managing transactions, budgets, savings, investments, goals, net worth, and shared couple finances — all local, no cloud required.
 
-First, run the development server:
+## Setup (Fresh Clone)
 
 ```bash
+# 1. Install dependencies (also auto-generates Prisma client)
+npm install
+
+# 2. Create the database and seed sample data
+npm run setup
+
+# 3. Start the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---|---|
+| `npm run db:seed` | Seed sample data |
+| `npm run db:studio` | Open Prisma Studio (visual DB browser) |
+| `npm run db:reset` | Wipe and re-seed the database |
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js 16** (App Router, React Server Components, Server Actions)
+- **TypeScript** strict mode
+- **Tailwind CSS v4** with dark zinc palette
+- **Prisma v7** + libsql adapter (SQLite, local file `dev.db`)
+- **Recharts** for all charts
+- **shadcn/ui**-style Radix UI components
+- **Sonner** for toast notifications
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Dashboard with net worth, budget ring, spending charts, goal cards
+- Transactions with categories, recurring rules, filters
+- Accounts (checking, savings, investment, credit, cash)
+- Envelope budgets with progress tracking
+- Savings rate + emergency fund calculator
+- Goals with milestone celebrations and what-if simulator
+- Investment portfolio with holdings and allocation chart
+- Net worth trend tracking with monthly snapshots
+- Subscriptions tracker with audit view
+- Reports & analytics (12-month trends, category breakdowns)
+- Couple Hub — money dates, financial harmony score, shared goals, check-ins
+- Settings for household members and categories
