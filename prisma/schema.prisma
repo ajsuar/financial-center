@@ -1,0 +1,390 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Household & Members ─────────────────────────────────────────────────────
+
+model Household {
+  id        String   @id @default(cuid())
+  name      String
+  currency  String   @default("USD")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members           Member[]
+  accounts          Account[]
+  categories        Category[]
+  budgets           Budget[]
+  goals             Goal[]
+  checkIns          CheckIn[]
+  moneyDates        MoneyDate[]
+  netWorthSnapshots NetWorthSnapshot[]
+  recurringRules    RecurringRule[]
+
+  @@map("households")
+}
+
+model Member {
+  id          String    @id @default(cuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id])
+  name        String
+  color       String    @default("#6366f1")
+  emoji       String    @default("👤")
+  isDefault   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  transactions     Transaction[]
+  checkInResponses CheckInResponse[]
+
+  @@map("members")
+}
+
+// ─── Accounts ────────────────────────────────────────────────────────────────
+
+model Account {
+  id          String    @id @default(cuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id])
+  name        String
+  type        String    // CHECKING, SAVINGS, INVESTMENT, CREDIT, LOAN, MORTGAGE, CASH, OTHER_ASSET, OTHER_LIABILITY
+  subtype     String?
+  institution String?
+  currency    String    @default("USD")
+  balance     Float     @default(0)
+  isShared    Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  color       String?
+  icon        String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  transactions  Transaction[]
+  holdings      InvestmentHolding[]
+  investmentTxs InvestmentTransaction[]
+  snapshots     AccountSnapshot[]
+  goalLinks     GoalAccountLink[]
+
+  @@map("accounts")
+}
+
+// ─── Categories ──────────────────────────────────────────────────────────────
+
+model Category {
+  id          String    @id @default(cuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id])
+  name        String
+  icon        String?
+  color       String    @default("#6366f1")
+  type        String    // INCOME, EXPENSE
+  isSystem    Boolean   @default(false)
+  parentId    String?
+  parent      Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children    Category[] @relation("SubCategories")
+  sortOrder   Int        @default(0)
+
+  transactions Transaction[]
+  budgetLines  BudgetLine[]
+
+  @@map("categories")
+}
+
+// ─── Transactions ────────────────────────────────────────────────────────────
+
+model Transaction {
+  id             String    @id @default(cuid())
+  date           DateTime
+  description    String
+  amount         Float
+  type           String    // INCOME, EXPENSE, TRANSFER
+  notes          String?
+  isReviewed     Boolean   @default(false)
+  tags           String?   // JSON array
+
+  accountId      String
+  account        Account   @relation(fields: [accountId], references: [id])
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  memberId       String?
+  member         Member?   @relation(fields: [memberId], references: [id])
+
+  transferLinkId String?
+
+  splitType      String?   // EQUAL, PERCENTAGE, FIXED, ONE_PERSON
+  splitData      String?   // JSON
+
+  recurringRuleId String?
+  recurringRule   RecurringRule? @relation(fields: [recurringRuleId], references: [id])
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([date])
+  @@index([accountId])
+  @@index([categoryId])
+  @@map("transactions")
+}
+
+// ─── Recurring Rules & Subscriptions ─────────────────────────────────────────
+
+model RecurringRule {
+  id             String    @id @default(cuid())
+  householdId    String
+  household      Household @relation(fields: [householdId], references: [id])
+  name           String
+  amount         Float
+  frequency      String    // DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, ANNUALLY
+  dayOfMonth     Int?
+  startDate      DateTime
+  endDate        DateTime?
+  nextDue        DateTime
+  lastTriggered  DateTime?
+  isActive       Boolean   @default(true)
+  isSubscription Boolean   @default(false)
+  provider       String?
+  categoryId     String?
+  accountId      String?
+  notes          String?
+
+  transactions   Transaction[]
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("recurring_rules")
+}
+
+// ─── Budgets ─────────────────────────────────────────────────────────────────
+
+model Budget {
+  id          String    @id @default(cuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id])
+  name        String
+  period      String    // MONTHLY, WEEKLY, CUSTOM
+  month       Int?
+  year        Int?
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  notes       String?
+
+  lines       BudgetLine[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("budgets")
+}
+
+model BudgetLine {
+  id         String   @id @default(cuid())
+  budgetId   String
+  budget     Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  allocated  Float
+  rollover   Boolean  @default(false)
+  notes      String?
+
+  @@unique([budgetId, categoryId])
+  @@map("budget_lines")
+}
+
+// ─── Goals ───────────────────────────────────────────────────────────────────
+
+model Goal {
+  id              String    @id @default(cuid())
+  householdId     String
+  household       Household @relation(fields: [householdId], references: [id])
+  name            String
+  description     String?
+  type            String    // SAVINGS, DEBT_PAYOFF, INVESTMENT, PURCHASE, EMERGENCY_FUND, CUSTOM
+  targetAmount    Float
+  currentAmount   Float     @default(0)
+  targetDate      DateTime?
+  priority        Int       @default(1)
+  isShared        Boolean   @default(false)
+  isCompleted     Boolean   @default(false)
+  completedAt     DateTime?
+  color           String    @default("#6366f1")
+  emoji           String    @default("🎯")
+  celebrationSeen Boolean   @default(false)
+
+  linkedAccounts GoalAccountLink[]
+  contributions  GoalContribution[]
+  milestones     GoalMilestone[]
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("goals")
+}
+
+model GoalAccountLink {
+  goalId    String
+  goal      Goal    @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id])
+
+  @@id([goalId, accountId])
+  @@map("goal_account_links")
+}
+
+model GoalContribution {
+  id        String   @id @default(cuid())
+  goalId    String
+  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  amount    Float
+  date      DateTime
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@map("goal_contributions")
+}
+
+model GoalMilestone {
+  id         String    @id @default(cuid())
+  goalId     String
+  goal       Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  percentage Int
+  reachedAt  DateTime?
+  celebrated Boolean   @default(false)
+
+  @@map("goal_milestones")
+}
+
+// ─── Investments ─────────────────────────────────────────────────────────────
+
+model InvestmentHolding {
+  id             String    @id @default(cuid())
+  accountId      String
+  account        Account   @relation(fields: [accountId], references: [id])
+  ticker         String?
+  name           String
+  assetClass     String    // US_STOCK, INTL_STOCK, BOND, REAL_ESTATE, CASH, CRYPTO, COMMODITY, OTHER
+  quantity       Float     @default(0)
+  costBasis      Float     @default(0)
+  currentPrice   Float     @default(0)
+  currentValue   Float     @default(0)
+  currency       String    @default("USD")
+  priceUpdatedAt DateTime?
+
+  priceHistory   HoldingPricePoint[]
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("investment_holdings")
+}
+
+model HoldingPricePoint {
+  id        String            @id @default(cuid())
+  holdingId String
+  holding   InvestmentHolding @relation(fields: [holdingId], references: [id], onDelete: Cascade)
+  date      DateTime
+  price     Float
+  value     Float
+
+  @@index([holdingId, date])
+  @@map("holding_price_points")
+}
+
+model InvestmentTransaction {
+  id        String   @id @default(cuid())
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  date      DateTime
+  type      String   // BUY, SELL, DIVIDEND, CONTRIBUTION, WITHDRAWAL, FEE
+  ticker    String?
+  name      String?
+  quantity  Float?
+  price     Float?
+  amount    Float
+  fees      Float    @default(0)
+  notes     String?
+
+  @@index([accountId, date])
+  @@map("investment_transactions")
+}
+
+// ─── Net Worth Snapshots ─────────────────────────────────────────────────────
+
+model NetWorthSnapshot {
+  id               String    @id @default(cuid())
+  householdId      String
+  household        Household @relation(fields: [householdId], references: [id])
+  date             DateTime
+  totalAssets      Float
+  totalLiabilities Float
+  netWorth         Float
+  breakdown        String    // JSON
+
+  @@index([householdId, date])
+  @@map("net_worth_snapshots")
+}
+
+model AccountSnapshot {
+  id        String   @id @default(cuid())
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  balance   Float
+  date      DateTime @default(now())
+
+  @@index([accountId, date])
+  @@map("account_snapshots")
+}
+
+// ─── Check-ins & Money Dates ─────────────────────────────────────────────────
+
+model CheckIn {
+  id           String    @id @default(cuid())
+  householdId  String
+  household    Household @relation(fields: [householdId], references: [id])
+  type         String    // WEEKLY, MONTHLY, QUARTERLY, ANNUAL, MONEY_DATE
+  status       String    @default("PENDING")
+  scheduledFor DateTime
+  completedAt  DateTime?
+  netWorth     Float?
+  mood         Int?
+  notes        String?
+
+  responses    CheckInResponse[]
+
+  createdAt    DateTime  @default(now())
+
+  @@map("check_ins")
+}
+
+model CheckInResponse {
+  id        String  @id @default(cuid())
+  checkInId String
+  checkIn   CheckIn @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  promptKey String
+  response  String
+  memberId  String?
+  member    Member? @relation(fields: [memberId], references: [id])
+
+  @@map("check_in_responses")
+}
+
+model MoneyDate {
+  id           String    @id @default(cuid())
+  householdId  String
+  household    Household @relation(fields: [householdId], references: [id])
+  scheduledFor DateTime
+  agenda       String    // JSON
+  completedAt  DateTime?
+  notes        String?
+  duration     Int       @default(30)
+
+  createdAt    DateTime  @default(now())
+
+  @@map("money_dates")
+}
